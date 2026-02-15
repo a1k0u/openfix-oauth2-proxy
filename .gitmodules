@@ -1,0 +1,21 @@
+[submodule "envsubst"]
+	path = envsubst
+	url = git@github.com:a1k0u/envsubst.git
+[submodule "mockoidc"]
+	path = mockoidc
+	url = git@github.com:a1k0u/mockoidc.git
+[submodule "redislock"]
+	path = redislock
+	url = git@github.com:a1k0u/redislock.git
+[submodule "minisentinel"]
+	path = minisentinel
+	url = git@github.com:a1k0u/minisentinel.git
+[submodule "go-redis-v9"]
+	path = go-redis-v9
+	url = git@github.com:a1k0u/go-redis-v9.git
+[submodule "gopher-lua"]
+	path = gopher-lua
+	url = git@github.com:a1k0u/gopher-lua.git
+[submodule "miniredis"]
+	path = miniredis
+	url = git@github.com:a1k0u/miniredis.git
