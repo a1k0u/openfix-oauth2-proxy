@@ -1,5 +1,18 @@
 ## Debian packaging of oauth2-proxy
 
+> :warning: Caution. This is a work in active progress.
+
+### Build
+
+Build all dependencies and load them to the local repository.
+```bash
+make build-deps
+```
+
+...
+
+### Road map
+
 - envsubst (`golang-github-a8m-envsubst`)
   - [x] [ITP #1127770](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127770)
   - [x] Package builds
@@ -39,6 +52,7 @@
   - [ ] Linter: not run
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
+  - [ ] Write tests with miniredis
 
 - go-redis-v9 (`golang-github-redis-go-redis-v9`)
   - [x] [ITP #1127858](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127858)
@@ -63,3 +77,5 @@
   - [ ] Linter: not run
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
+  - [ ] Write patch for coreos/go-oidc/v3 to downgrade to v3.4.0
+  - [ ] Write patch for google-cloud-go-compute-metadata

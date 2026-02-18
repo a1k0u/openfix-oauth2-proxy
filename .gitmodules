@@ -29,4 +29,4 @@
 [submodule "oauth2-proxy"]
 	path = oauth2-proxy
 	url = https://github.com/a1k0u/oauth2-proxy.git
-        branch = debian/sid
+	branch = debian/sid
