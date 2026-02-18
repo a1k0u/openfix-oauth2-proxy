@@ -1,28 +1,28 @@
 [submodule "envsubst"]
 	path = envsubst
-	url = git@github.com:a1k0u/envsubst.git
+	url = https://github.com/a1k0u/envsubst.git
 	branch = debian/sid
 [submodule "mockoidc"]
 	path = mockoidc
-	url = git@github.com:a1k0u/mockoidc.git
+	url = https://github.com/a1k0u/mockoidc.git
 	branch = debian/sid
 [submodule "go-redis-v9"]
 	path = go-redis-v9
-	url = git@github.com:a1k0u/go-redis-v9.git
+	url = https://github.com/a1k0u/go-redis-v9.git
 	branch = debian/sid
 [submodule "minisentinel"]
 	path = minisentinel
-	url = git@github.com:a1k0u/minisentinel.git
+	url = https://github.com/a1k0u/minisentinel.git
 	branch = debian/sid
 [submodule "gopher-lua"]
 	path = gopher-lua
-	url = git@github.com:a1k0u/gopher-lua.git
+	url = https://github.com/a1k0u/gopher-lua.git
 	branch = debian/sid
 [submodule "miniredis"]
 	path = miniredis
-	url = git@github.com:a1k0u/miniredis.git
+	url = https://github.com/a1k0u/miniredis.git
 	branch = debian/sid
 [submodule "redislock"]
 	path = redislock
-	url = git@github.com:a1k0u/redislock.git
+	url = https://github.com/a1k0u/redislock.git
 	branch = debian/sid
