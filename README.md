@@ -4,12 +4,16 @@
 
 ### Build
 
-Build all dependencies and load them to the local repository.
+Just run command bellow to build oauth2-proxy and all its dependencies:
 ```bash
-make build-deps
+make
 ```
 
-...
+To speed up the build process, you can build the dependencies in parallel:
+```bash
+make -j$(nproc)
+```
+
 
 ### Road map
 
@@ -72,10 +76,10 @@ make build-deps
 
 - oauth2-proxy
   - [x] [ITP #982891](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=982891)
-  - [ ] Package builds
+  - [x] Package builds
   - [ ] Salsa repository
   - [ ] Linter: not run
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
-  - [ ] Write patch for coreos/go-oidc/v3 to downgrade to v3.4.0
-  - [ ] Write patch for google-cloud-go-compute-metadata
+  - [x] Write patch for coreos/go-oidc/v3 to downgrade to v3.4.0
+  - [x] Write patch for google-cloud-go-compute-metadata

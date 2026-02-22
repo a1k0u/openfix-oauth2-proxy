@@ -1,27 +1,33 @@
-LOCAL_REPO_DIR := /srv/apt-local-repositroy
+BASEPATH ?= /var/cache/pbuilder/base.cow
 
-.PHONY: build-dep load-deps
+.PHONY: all
+all: oauth2-proxy.deb
 
-build-dep:
-	@if [ -z "$${DIR}" ]; then echo "Usage: make build-dep DIR=/path/to/folder"; exit 1; fi
-	cd "$${DIR}" && gbp buildpackage --git-pbuilder
+oauth2-proxy.deb: envsubst.deb mockoidc.deb redislock.deb minisentinel.deb go-redis-v9.deb
+redislock.deb: miniredis.deb go-redis-v9.deb
+minisentinel.deb: miniredis.deb
+miniredis.deb: gopher-lua.deb
 
+%.deb: BUILD_PATH = .$*.build
+%.deb:
+	@echo "Build $@ with prerequisites $^ in $(BUILD_PATH)"
 
-load-deps:
-	mkdir -p $(LOCAL_REPO_DIR)
-	mv -f ./*.deb $(LOCAL_REPO_DIR) || true
-	(cd $(LOCAL_REPO_DIR); dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz)
-	echo "BINDMOUNTS=$(LOCAL_REPO_DIR)" > "$$HOME/.pbuilderrc"
-	echo "OTHERMIRROR=\"deb [trusted=yes] file:$(LOCAL_REPO_DIR) ./\"" >> "$$HOME/.pbuilderrc"
-	sudo cowbuilder --update --override-config
+	mkdir -p $(BUILD_PATH)/cow $(BUILD_PATH)/deb
 
-build-deps:
-	make build-dep DIR=envsubst
-	make build-dep DIR=gopher-lua
-	make build-dep DIR=go-redis-v9
-	make build-dep DIR=mockoidc
-	make load-deps
-	make build-dep DIR=redislock
-	make build-dep DIR=miniredis
-	make load-deps
-	make build-dep DIR=minisentinel
+	@$(foreach deb, $^, ln -s $(abspath $(deb)) $(BUILD_PATH)/deb)
+	cd $(BUILD_PATH)/deb && (dpkg-scanpackages . | gzip -9c > Packages.gz)
+
+	cd $* && gbp buildpackage \
+		--git-pbuilder \
+		--git-pbuilder-options="\
+			--basepath $(abspath $(BASEPATH)) \
+			--buildplace $(abspath $(BUILD_PATH)/cow) \
+			--bindmounts $(abspath $(BUILD_PATH)/deb) \
+			--othermirror 'deb [trusted=yes] file:$(abspath $(BUILD_PATH)/deb) .' \
+			--buildresult $(abspath $(BUILD_PATH)) \
+		"
+	
+	ln -P $(BUILD_PATH)/*.deb $@
+	find $(BUILD_PATH) -maxdepth 1 -type f -exec mv -t . {} +
+	
+	rm -rf $(BUILD_PATH)
