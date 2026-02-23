@@ -21,6 +21,7 @@ miniredis.deb: gopher-lua.deb
 
 	cd $* && gbp buildpackage \
 		--git-pbuilder \
+		--git-ignore-branch \
 		--git-pbuilder-options="\
 			--override-config \
 			--hookdir $(abspath hooks) \
