@@ -19,6 +19,7 @@ miniredis.deb: gopher-lua.deb
 
 	cd $* && gbp buildpackage \
 		--git-pbuilder \
+		--git-ignore-branch \
 		--git-pbuilder-options="\
 			--basepath $(abspath $(BASEPATH)) \
 			--buildplace $(abspath $(BUILD_PATH)/cow) \
