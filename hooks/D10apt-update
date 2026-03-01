@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+echo "[hook] running apt-get update inside chroot"
+apt-get update
