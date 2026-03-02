@@ -15,7 +15,7 @@ miniredis.deb: gopher-lua.deb
 
 	mkdir -p $(BUILD_PATH)/cow $(BUILD_PATH)/deb
 
-	$(foreach deb, $^, ln -P $(abspath $(deb)) $(BUILD_PATH)/deb;)
+	ln -P openfix_*.deb $(BUILD_PATH)/deb
 	cd $(BUILD_PATH)/deb && (dpkg-scanpackages . | gzip -9c > Packages.gz)
 
 	cd $* && gbp buildpackage \
@@ -30,7 +30,9 @@ miniredis.deb: gopher-lua.deb
 			--buildresult $(abspath $(BUILD_PATH)) \
 		"
 
-	ln -P $(BUILD_PATH)/*$*-*.deb $@
+    ln -P $(BUILD_PATH)/*$*-*.deb $@
+	ln -P $(BUILD_PATH)/*$*-*.deb openfix_$@
+
 	find $(BUILD_PATH) -maxdepth 1 -type f -exec mv -t . {} +
 	
 	rm -rf $(BUILD_PATH)
