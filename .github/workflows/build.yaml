@@ -1,0 +1,78 @@
+name: Build packages
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - ci
+
+jobs:
+    build:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Download dependencies
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y \
+                    ca-certificates \
+                    make \
+                    build-essential \
+                    debhelper \
+                    devscripts \
+                    git \
+                    git-buildpackage \
+                    pbuilder \
+                    cowbuilder \
+                    fakeroot \
+                    dh-golang \
+                    sudo \
+                    equivs \
+                    debian-archive-keyring \
+                    gpgv \
+                    debootstrap
+
+            - name: Setup GPG key
+              run: curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | sudo gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
+
+            - name: Create build environment
+              run: |
+                sudo cowbuilder --create \
+                    --buildplace /var/cache/pbuilder/base.cow \
+                    --mirror http://deb.debian.org/debian \
+                    --distribution sid \
+                    --debootstrapopts --keyring=/etc/apt/keyrings/debian-archive-12.gpg
+
+            - name: Init submodules
+              run: |
+                git submodule update --init --recursive --rebase
+                git submodule foreach 'git checkout debian/sid'
+            
+            - name: Build packages
+              run: make -j$(nproc)
+
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
+              if: failure()
+              with:
+                limit-access-to-actor: true
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: build-artifacts
+                path: |
+                    *.deb
+                    *.buildinfo
+                    *.changes
+                    *.dsc
+                    *.build
+                    *.source.changes
+                    *.orig.tar.gz
+                    *.debian.tar.xz
+                    *.tar.gz
+                    *.tar.xz
+
+# https://github.com/softprops/action-gh-release
