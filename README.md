@@ -14,6 +14,40 @@ To speed up the build process, you can build the dependencies in parallel:
 make -j$(nproc)
 ```
 
+Install build dependencies, setup cowbuilder and prepare submodules (_to do step by step, run targets inside makefile_):
+```bash
+make init
+```
+
+Build package with Docker and save it to the artifacts directory:
+```bash
+CONTAINER_NAME=oauth2-proxy-debian
+IMAGE_NAME=debian-builder
+ARTIFACTS_PATH=$(pwd)/.build
+
+mkdir -p $ARTIFACTS_PATH
+docker build -t $IMAGE_NAME -f Dockerfile .
+
+docker run \
+--cap-add SYS_ADMIN \
+--rm -it \
+--name $CONTAINER_NAME \
+--volume $ARTIFACTS_PATH:/artifacts:rw \
+--entrypoint /bin/bash \
+$IMAGE_NAME \
+-c '''
+  git clone https://github.com/a1k0u/openfix-oauth2-proxy.git
+  cd openfix-oauth2-proxy
+  
+  mkdir -p /artifacts-local
+  make init
+  make -j$(nproc) BUILD_ROOT=/tmp/$RANDOM ARTIFACTS_PATH=/artifacts-local
+
+  mv /artifacts-local/* /artifacts/
+'''
+
+docker image rm $IMAGE_NAME
+```
 
 ### Road map
 

@@ -7,3 +7,4 @@
 *.orig.tar.gz
 *.deb
 .repository
+.build
