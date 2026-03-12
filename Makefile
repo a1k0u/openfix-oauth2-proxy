@@ -69,3 +69,6 @@ init-cowbuilder: init-deps init-keys
 		--mirror http://deb.debian.org/debian \
 		--distribution sid \
 		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive-12.gpg
+
+# Run autopkgtest
+# autopkgtest oauth2-proxy_7.14.2-1_arm64.changes -- unshare --release unstable
