@@ -44,7 +44,7 @@ init: init-deps init-keys init-cowbuilder init-submodules
 
 init-deps:
 	-[ -f /etc/pbuilderrc ] || echo "MIRRORSITE=http://deb.debian.org/debian" > /etc/pbuilderrc
-	apt-get update && apt-get install -y \
+	sudo apt-get update && sudo apt-get install -y \
 		build-essential \
 		debhelper \
 		devscripts \
