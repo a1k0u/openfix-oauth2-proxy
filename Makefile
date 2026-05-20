@@ -58,7 +58,7 @@ init-deps:
 		debootstrap
 
 init-keys:
-	curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
+	curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | sudo gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
 
 init-submodules:
 	git submodule update --init --recursive --rebase
