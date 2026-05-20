@@ -44,7 +44,7 @@ init: init-deps init-keys init-cowbuilder init-submodules
 
 init-deps:
 	-[ -f /etc/pbuilderrc ] || echo "MIRRORSITE=http://deb.debian.org/debian" > /etc/pbuilderrc
-	sudo apt-get update && sudo apt-get install -y \
+	apt-get update && apt-get install -y \
 		build-essential \
 		debhelper \
 		devscripts \
@@ -58,14 +58,13 @@ init-deps:
 		debootstrap
 
 init-keys:
-	curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | sudo gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
+	curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
 
 init-submodules:
 	git submodule update --init --recursive --rebase
 	git submodule foreach 'git checkout debian/sid'
 
 init-cowbuilder: init-deps init-keys
-	mkdir -p /var/cache/pbuilder
 	cowbuilder --create \
 		--buildplace /var/cache/pbuilder/base.cow \
 		--mirror http://deb.debian.org/debian \
