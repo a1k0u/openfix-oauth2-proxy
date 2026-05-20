@@ -65,6 +65,7 @@ init-submodules:
 	git submodule foreach 'git checkout debian/sid'
 
 init-cowbuilder: init-deps init-keys
+	mkdir -p /var/cache/pbuilder
 	cowbuilder --create \
 		--buildplace /var/cache/pbuilder/base.cow \
 		--mirror http://deb.debian.org/debian \
