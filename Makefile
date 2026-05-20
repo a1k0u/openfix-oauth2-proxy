@@ -58,7 +58,11 @@ init-deps:
 		debootstrap
 
 init-keys:
-	curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
+	mkdir -p /etc/apt/keyrings
+	curl -fsSL \
+		https://ftp-master.debian.org/keys/archive-key-12.asc \
+		https://ftp-master.debian.org/keys/archive-key-13.asc \
+		| gpg --dearmor -o /etc/apt/keyrings/debian-archive.gpg
 
 init-submodules:
 	git submodule update --init --recursive --rebase
@@ -69,7 +73,7 @@ init-cowbuilder: init-deps init-keys
 		--buildplace /var/cache/pbuilder/base.cow \
 		--mirror http://deb.debian.org/debian \
 		--distribution sid \
-		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive-12.gpg
+		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive.gpg
 
 # Run autopkgtest
 # autopkgtest oauth2-proxy_7.14.2-1_arm64.changes -- unshare --release unstable
