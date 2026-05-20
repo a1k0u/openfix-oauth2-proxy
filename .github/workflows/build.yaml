@@ -13,9 +13,15 @@ jobs:
         container:
           image: alkosenko/openfix-debian-ci:ci
           options: --privileged
+        env:
+          BASE_PATH: ${{ github.workspace }}/.cowbuilder/base.cow
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
+            
+            - name: Trust git repository
+              run: |
+                git config --global --add safe.directory ${{ github.workspace }}
 
             - name: Setup tmate session
               uses: mxschmitt/action-tmate@v3

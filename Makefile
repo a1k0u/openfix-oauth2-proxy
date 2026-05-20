@@ -69,8 +69,9 @@ init-submodules:
 	git submodule foreach 'git checkout debian/sid'
 
 init-cowbuilder: init-deps init-keys
+	mkdir -p $(dir $(BASE_PATH))
 	cowbuilder --create \
-		--buildplace /var/cache/pbuilder/base.cow \
+		--buildplace $(abspath $(BASE_PATH)) \
 		--mirror http://deb.debian.org/debian \
 		--distribution sid \
 		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive.gpg
