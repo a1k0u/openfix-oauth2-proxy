@@ -86,3 +86,34 @@ jobs:
             - name: Run lintian
               working-directory: artifacts
               run: lintian --info --display-info --fail-on error *.deb
+
+    test:
+        runs-on: ubuntu-22.04
+        needs: [ build ]
+        steps:
+            - name: Install autopkgtest
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y --no-install-recommends \
+                  autopkgtest mmdebstrap uidmap util-linux
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v7
+              with:
+                name: build-artifacts
+                path: artifacts
+
+            - name: Run autopkgtest
+              working-directory: artifacts
+              run: |
+                set +e
+                autopkgtest *.changes -- unshare --release unstable
+                rc=$?
+
+                case $rc in
+                  0) echo "All tests passed" ;;
+                  2) echo "::warning::Some autopkgtest tests were skipped"; rc=0 ;;
+                  8) echo "::warning::No autopkgtest tests defined"; rc=0 ;;
+                esac
+
+                exit $rc
