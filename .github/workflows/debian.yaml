@@ -75,9 +75,7 @@ jobs:
         needs: [ build ] 
         steps:
             - name: Install lintian
-              run: |
-                sudo apt-get update
-                sudo apt-get install -y --no-install-recommends lintian
+              run: sudo apt-get update && sudo apt-get install -y --no-install-recommends lintian
 
             - name: Download artifacts
               uses: actions/download-artifact@v7
@@ -87,18 +85,4 @@ jobs:
 
             - name: Run lintian
               working-directory: artifacts
-              run: |
-                shopt -s nullglob
-
-                changes=( *.changes )
-                if [ ${#changes[@]} -eq 0 ]; then
-                  echo "No .changes files found, falling back to .deb files"
-                  changes=( *.deb )
-                fi
-
-                lintian \
-                  --info \
-                  --display-info \
-                  --fail-on error \
-                  "${changes[@]}"
-
+              run: lintian --info --display-info --fail-on error *.deb
