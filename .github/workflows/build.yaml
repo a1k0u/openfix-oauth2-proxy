@@ -9,7 +9,7 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         container:
           image: alkosenko/openfix-debian-ci:ci
           options: --privileged
@@ -18,10 +18,10 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
-            
+
             - name: Trust git repository
               run: |
-                git config --global --add safe.directory ${{ github.workspace }}
+                git config --global --add safe.directory '*'
 
             - name: Setup tmate session
               uses: mxschmitt/action-tmate@v3

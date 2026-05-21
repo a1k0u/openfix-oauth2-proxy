@@ -74,6 +74,7 @@ init-cowbuilder: init-deps init-keys
 		--buildplace $(abspath $(BASE_PATH)) \
 		--mirror http://deb.debian.org/debian \
 		--distribution sid \
+		--extrapackages cowdancer \
 		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive.gpg
 
 # Run autopkgtest
