@@ -71,7 +71,7 @@ init-submodules:
 init-cowbuilder: init-deps init-keys
 	mkdir -p $(dir $(BASE_PATH))
 	cowbuilder --create \
-		--buildplace $(abspath $(BASE_PATH)) \
+		--basepath $(abspath $(BASE_PATH)) \
 		--mirror http://deb.debian.org/debian \
 		--distribution sid \
 		--extrapackages cowdancer \
