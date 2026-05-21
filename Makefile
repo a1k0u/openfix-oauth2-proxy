@@ -1,7 +1,7 @@
 BASE_PATH ?= /var/cache/pbuilder/base.cow
+APT_CACHE_PATH ?= /var/cache/pbuilder/aptcache
 BUILD_ROOT ?= .
 ARTIFACTS_PATH ?= .
-APT_CACHE_PATH ?= $(BUILD_ROOT)/.aptcache
 
 .PHONY: all
 all: oauth2-proxy.deb
@@ -15,7 +15,7 @@ miniredis.deb: gopher-lua.deb
 %.deb:
 	@echo "Build $@ with prerequisites $^ in $(BUILD_PATH)"
 
-	mkdir -p $(BUILD_PATH)/cow $(BUILD_PATH)/deb $(APT_CACHE_PATH)
+	mkdir -p $(BUILD_PATH)/cow $(BUILD_PATH)/deb
 
 	-ln -P $(ARTIFACTS_PATH)/openfix_*.deb $(BUILD_PATH)/deb
 	cd $(BUILD_PATH)/deb && (dpkg-scanpackages . | gzip -9c > Packages.gz)
@@ -41,8 +41,8 @@ miniredis.deb: gopher-lua.deb
 	
 	rm -rf $(BUILD_PATH)
 
-.PHONY: init init-deps init-keys init-cowbuilder init-submodules
-init: init-deps init-keys init-cowbuilder init-submodules
+.PHONY: init init-deps init-keys init-dirs init-cowbuilder init-submodules
+init: init-deps init-keys init-dirs init-cowbuilder init-submodules
 
 init-deps:
 	-[ -f /etc/pbuilderrc ] || echo "MIRRORSITE=http://deb.debian.org/debian" > /etc/pbuilderrc
@@ -66,11 +66,14 @@ init-keys:
 		https://ftp-master.debian.org/keys/archive-key-13.asc \
 		| gpg --dearmor -o /etc/apt/keyrings/debian-archive.gpg
 
+init-dirs:
+	mkdir -p $(dir $(BASE_PATH)) $(APT_CACHE_PATH)
+
 init-submodules:
 	git submodule update --init --recursive --rebase
 	git submodule foreach 'git checkout debian/sid'
 
-init-cowbuilder: init-deps init-keys
+init-cowbuilder: init-deps init-dirs init-keys
 	cowbuilder --create \
 		--basepath $(abspath $(BASE_PATH)) \
 		--mirror http://deb.debian.org/debian \

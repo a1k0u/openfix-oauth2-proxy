@@ -15,6 +15,7 @@ jobs:
           options: --privileged
         env:
           BASE_PATH: ${{ github.workspace }}/.cowbuilder/base.cow
+          APT_CACHE_PATH: ${{ github.workspace }}/.aptcache
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
