@@ -72,7 +72,9 @@ jobs:
 
     lint:
         runs-on: ubuntu-22.04
-        needs: [ build ] 
+        needs: [ build ]
+        container:
+          image: alkosenko/openfix-debian-ci:ci
         steps:
             - name: Install lintian
               run: sudo apt-get update && sudo apt-get install -y --no-install-recommends lintian
@@ -86,3 +88,43 @@ jobs:
             - name: Run lintian
               working-directory: artifacts
               run: lintian --info --display-info --fail-on error *.deb
+
+    test:
+        runs-on: ubuntu-22.04
+        needs: [ build ]
+        container:
+          image: alkosenko/openfix-debian-ci:ci
+          options: --privileged
+        steps:
+            - name: Install autopkgtest
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y --no-install-recommends \
+                  autopkgtest mmdebstrap uidmap util-linux
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v7
+              with:
+                name: build-artifacts
+                path: artifacts
+
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
+              with:
+                limit-access-to-actor: true
+
+            - name: Run autopkgtest
+              working-directory: artifacts
+              run: |
+                set +e
+                autopkgtest oauth2-proxy_*_$(dpkg --print-architecture).changes \
+                  -- unshare --release unstable
+                rc=$?
+
+                case $rc in
+                  0) echo "All tests passed" ;;
+                  2) echo "::warning::Some autopkgtest tests were skipped"; rc=0 ;;
+                  8) echo "::warning::No autopkgtest tests defined"; rc=0 ;;
+                esac
+
+                exit $rc
