@@ -1,6 +1,7 @@
 BASE_PATH ?= /var/cache/pbuilder/base.cow
 BUILD_ROOT ?= .
 ARTIFACTS_PATH ?= .
+APT_CACHE_PATH ?= $(BUILD_ROOT)/.aptcache
 
 .PHONY: all
 all: oauth2-proxy.deb
@@ -14,7 +15,7 @@ miniredis.deb: gopher-lua.deb
 %.deb:
 	@echo "Build $@ with prerequisites $^ in $(BUILD_PATH)"
 
-	mkdir -p $(BUILD_PATH)/cow $(BUILD_PATH)/deb
+	mkdir -p $(BUILD_PATH)/cow $(BUILD_PATH)/deb $(APT_CACHE_PATH)
 
 	-ln -P $(ARTIFACTS_PATH)/openfix_*.deb $(BUILD_PATH)/deb
 	cd $(BUILD_PATH)/deb && (dpkg-scanpackages . | gzip -9c > Packages.gz)
@@ -28,6 +29,7 @@ miniredis.deb: gopher-lua.deb
 			--basepath $(abspath $(BASE_PATH)) \
 			--buildplace $(abspath $(BUILD_PATH)/cow) \
 			--bindmounts $(abspath $(BUILD_PATH)/deb) \
+			--aptcache $(abspath $(APT_CACHE_PATH)) \
 			--othermirror 'deb [trusted=yes] file:$(abspath $(BUILD_PATH)/deb) ./' \
 			--buildresult $(abspath $(BUILD_PATH)) \
 		"
