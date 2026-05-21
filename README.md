@@ -51,6 +51,20 @@ docker image rm $IMAGE_NAME
 
 ### Road map
 
+#### Overall plan
+
+- [x] Package oauth2-proxy to debian package
+  - [x] Includes all control dependencies
+  - [x] No implicit dependencies on other packages inside
+  - [x] Correct debian package structure
+  - [ ] Builds in latest stable debian release
+  - [x] Consists autopkgtest
+  - [x] Passes debian/tests
+- [x] Everything builds in CI
+- [ ] Include in sid repository
+
+#### Packages
+
 - envsubst (`golang-github-a8m-envsubst`)
   - [x] [ITP #1127770](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127770)
   - [x] Package builds
@@ -90,7 +104,7 @@ docker image rm $IMAGE_NAME
   - [ ] Linter: not run
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
-  - [ ] Write tests with miniredis
+  - [x] Write tests with miniredis (https://github.com/bsm/redislock/pull/82)
 
 - go-redis-v9 (`golang-github-redis-go-redis-v9`)
   - [x] [ITP #1127858](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127858)

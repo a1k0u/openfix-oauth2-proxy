@@ -45,19 +45,28 @@ jobs:
                     *.changes
                     *.dsc
                     *.build
-                    *.source.changes
-                    *.orig.tar.gz
-                    *.debian.tar.xz
                     *.tar.gz
                     *.tar.xz
+
+            - name: Short SHA
+              id: short-sha
+              run: echo "sha16=$(git rev-parse --short=16 HEAD)" >> $GITHUB_OUTPUT
+
+            - name: Create tag
+              if: github.ref == 'refs/heads/master'
+              run: |
+                git tag ${{ steps.short-sha.outputs.sha16 }}
+                git push origin ${{ steps.short-sha.outputs.sha16 }}
 
             - name: Create GitHub release
               if: github.ref == 'refs/heads/master'
               uses: softprops/action-gh-release@v2
               with:
-                name: ${{ github.sha }}
-                tag_name: ${{ github.sha }}
-                prerelease: true
+                name: ${{ steps.short-sha.outputs.sha16 }}
+                tag_name: ${{ steps.short-sha.outputs.sha16 }}
+                prerelease: false
+                make_latest: true
                 generate_release_notes: true
+                fail_on_unmatched_files: false
                 files: *artifacts
 
