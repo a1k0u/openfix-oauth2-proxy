@@ -1,7 +1,5 @@
 ## Debian packaging of oauth2-proxy
 
-> :warning: Caution. This is a work in active progress.
-
 ### Build
 
 Just run command bellow to build oauth2-proxy and all its dependencies:
@@ -69,7 +67,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #1127770](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127770)
   - [x] Package builds
   - [x] Salsa repository: [go-team/packages/golang-github-a8m-envsubst](https://salsa.debian.org/go-team/packages/golang-github-a8m-envsubst)
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
 
@@ -77,7 +75,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #1127854](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127854). Initially ITA, switched to ITP since the package had not been updated for a long time.
   - [x] Package builds
   - [x] Salsa repository: [go-team/packages/golang-github-alicebob-miniredis](https://salsa.debian.org/go-team/packages/golang-github-alicebob-miniredis)
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
 
@@ -85,7 +83,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #1127771](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127771)
   - [x] Package builds
   - [x] Salsa repository: [go-team/packages/golang-github-bose-minisentinel](https://salsa.debian.org/go-team/packages/golang-github-bose-minisentinel)
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
 
@@ -93,7 +91,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #1127772](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127772)
   - [x] Package builds
   - [x] Salsa repository: [go-team/packages/golang-github-oauth2-proxy-mockoidc](https://salsa.debian.org/go-team/packages/golang-github-oauth2-proxy-mockoidc)
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
 
@@ -101,7 +99,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #1127762](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127762)
   - [x] Package builds
   - [x] Salsa repository: [go-team/packages/golang-github-bsm-redislock](https://salsa.debian.org/go-team/packages/golang-github-bsm-redislock)
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
   - [x] Write tests with miniredis (https://github.com/bsm/redislock/pull/82)
@@ -110,7 +108,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #1127858](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1127858)
   - [x] Package builds
   - [x] Salsa repository: [go-team/packages/golang-github-redis-go-redis-v9](https://salsa.debian.org/go-team/packages/golang-github-redis-go-redis-v9)
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
 
@@ -126,7 +124,7 @@ docker image rm $IMAGE_NAME
   - [x] [ITP #982891](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=982891)
   - [x] Package builds
   - [ ] Salsa repository
-  - [ ] Linter: not run
+  - [x] Linter
   - [ ] Upload to Salsa repository
   - [ ] Request sponsorship
   - [x] Write patch for coreos/go-oidc/v3 to downgrade to v3.4.0
