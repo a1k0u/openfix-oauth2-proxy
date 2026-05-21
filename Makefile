@@ -1,4 +1,5 @@
 BASE_PATH ?= /var/cache/pbuilder/base.cow
+APT_CACHE_PATH ?= /var/cache/pbuilder/aptcache
 BUILD_ROOT ?= .
 ARTIFACTS_PATH ?= .
 
@@ -21,12 +22,14 @@ miniredis.deb: gopher-lua.deb
 
 	cd $* && gbp buildpackage \
 		--git-pbuilder \
+		--git-ignore-branch \
 		--git-pbuilder-options="\
 			--override-config \
 			--hookdir $(abspath hooks) \
 			--basepath $(abspath $(BASE_PATH)) \
 			--buildplace $(abspath $(BUILD_PATH)/cow) \
 			--bindmounts $(abspath $(BUILD_PATH)/deb) \
+			--aptcache $(abspath $(APT_CACHE_PATH)) \
 			--othermirror 'deb [trusted=yes] file:$(abspath $(BUILD_PATH)/deb) ./' \
 			--buildresult $(abspath $(BUILD_PATH)) \
 		"
@@ -38,8 +41,8 @@ miniredis.deb: gopher-lua.deb
 	
 	rm -rf $(BUILD_PATH)
 
-.PHONY: init init-deps init-keys init-cowbuilder init-submodules
-init: init-deps init-keys init-cowbuilder init-submodules
+.PHONY: init init-deps init-keys init-dirs init-cowbuilder init-submodules
+init: init-deps init-keys init-dirs init-cowbuilder init-submodules
 
 init-deps:
 	-[ -f /etc/pbuilderrc ] || echo "MIRRORSITE=http://deb.debian.org/debian" > /etc/pbuilderrc
@@ -57,18 +60,25 @@ init-deps:
 		debootstrap
 
 init-keys:
-	curl -fsSL https://ftp-master.debian.org/keys/archive-key-12.asc | gpg --dearmor -o /etc/apt/keyrings/debian-archive-12.gpg
+	mkdir -p /etc/apt/keyrings
+	curl -fsSL \
+		https://ftp-master.debian.org/keys/archive-key-12.asc \
+		https://ftp-master.debian.org/keys/archive-key-13.asc \
+		| gpg --dearmor -o /etc/apt/keyrings/debian-archive.gpg
+
+init-dirs:
+	mkdir -p $(dir $(BASE_PATH)) $(APT_CACHE_PATH)
 
 init-submodules:
 	git submodule update --init --recursive --rebase
 	git submodule foreach 'git checkout debian/sid'
 
-init-cowbuilder: init-deps init-keys
+init-cowbuilder: init-deps init-dirs init-keys
 	cowbuilder --create \
-		--buildplace /var/cache/pbuilder/base.cow \
+		--basepath $(abspath $(BASE_PATH)) \
 		--mirror http://deb.debian.org/debian \
 		--distribution sid \
-		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive-12.gpg
+		--debootstrapopts --keyring=/etc/apt/keyrings/debian-archive.gpg
 
 # Run autopkgtest
 # autopkgtest oauth2-proxy_7.14.2-1_arm64.changes -- unshare --release unstable

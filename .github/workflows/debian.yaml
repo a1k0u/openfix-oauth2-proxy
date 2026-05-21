@@ -1,0 +1,61 @@
+name: Build Debian packages
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - ci
+            - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+    build:
+        runs-on: ubuntu-22.04
+        container:
+          image: alkosenko/openfix-debian-ci:ci
+          options: --privileged
+        env:
+          BASE_PATH: ${{ github.workspace }}/.cowbuilder/base.cow
+          APT_CACHE_PATH: ${{ github.workspace }}/.aptcache
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Trust git repository
+              run: git config --global --add safe.directory '*'
+
+            - name: Init environment
+              run: make init
+
+            - name: Build packages
+              run: make -j$(nproc)
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v7
+              with:
+                name: build-artifacts
+                path: &artifacts |
+                    *.deb
+                    *.buildinfo
+                    *.changes
+                    *.dsc
+                    *.build
+                    *.source.changes
+                    *.orig.tar.gz
+                    *.debian.tar.xz
+                    *.tar.gz
+                    *.tar.xz
+
+            - name: Create GitHub release
+              if: github.ref == 'refs/heads/master'
+              uses: softprops/action-gh-release@v2
+              with:
+                name: ${{ github.sha }}
+                tag_name: ${{ github.sha }}
+                prerelease: true
+                generate_release_notes: true
+                files: *artifacts
+
