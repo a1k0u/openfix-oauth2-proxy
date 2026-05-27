@@ -27,7 +27,7 @@ mkdir -p $ARTIFACTS_PATH
 docker build -t $IMAGE_NAME -f Dockerfile .
 
 docker run \
---cap-add SYS_ADMIN \
+--privileged \
 --rm -it \
 --name $CONTAINER_NAME \
 --volume $ARTIFACTS_PATH:/artifacts:rw \
