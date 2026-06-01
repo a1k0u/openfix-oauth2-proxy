@@ -6,8 +6,8 @@ ARTIFACTS_PATH ?= .
 .PHONY: all
 all: oauth2-proxy.deb
 
-oauth2-proxy.deb: envsubst.deb mockoidc.deb redislock.deb minisentinel.deb go-redis-v9.deb
-redislock.deb: miniredis.deb go-redis-v9.deb
+oauth2-proxy.deb: mockoidc.deb redislock.deb minisentinel.deb
+redislock.deb: miniredis.deb
 minisentinel.deb: miniredis.deb
 miniredis.deb: gopher-lua.deb
 

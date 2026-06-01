@@ -1,14 +1,6 @@
-[submodule "envsubst"]
-	path = envsubst
-	url = https://github.com/a1k0u/envsubst.git
-	branch = debian/sid
 [submodule "mockoidc"]
 	path = mockoidc
 	url = https://github.com/a1k0u/mockoidc.git
-	branch = debian/sid
-[submodule "go-redis-v9"]
-	path = go-redis-v9
-	url = https://github.com/a1k0u/go-redis-v9.git
 	branch = debian/sid
 [submodule "minisentinel"]
 	path = minisentinel
